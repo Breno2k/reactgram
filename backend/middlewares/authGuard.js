@@ -2,7 +2,7 @@ const User = require("../models/User")
 const jwt = require("jsonwebtoken")
 const jwtSecret = process.env.JWT_SECRET
 
-const authGuard = (req, res, next) => {
+const authGuard = async (req, res, next) => {
 
     const authHeader = req.headers["authorization"]
     const token = authHeader && authHeader.split(" ")[1]
@@ -15,7 +15,7 @@ const authGuard = (req, res, next) => {
 
         const verified = jwt.verify(token, jwtSecret)
 
-        req.user = User.findById(verified.id).selected("-password")
+        req.user = await User.findById(verified.id).select("-password").lean()
 
         next()
 
@@ -24,3 +24,5 @@ const authGuard = (req, res, next) => {
     }
 
 }
+
+module.exports = authGuard
