@@ -22,7 +22,7 @@ const imageStore = multer.diskStorage({
 })
 
 const imageUpload = multer({
-    storage: imageStorage,
+    storage: imageStore,
     fileFilter(req, file, cb) {
         if (!file.originalname.match(/\.(png|jpg)$/)) {
 
