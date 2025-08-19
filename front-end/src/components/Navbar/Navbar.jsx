@@ -1,0 +1,30 @@
+import styles from './Navbar.module.css'
+
+// Components
+import { NavLink, Link } from 'react-router-dom'
+import { BsSearch, BsHouseDoorFill, BsFillPersonFill, BsFillCameraFill } from 'react-icons/bs'
+
+const Navbar = () => {
+    return (
+        <nav className={styles.nav}>
+            <Link to="/">Reactgram</Link>
+            <form>
+                <BsSearch />
+                <input type="text" />
+            </form>
+            <ul className={styles.nav_links}>
+                <NavLink to="/">
+                    <BsHouseDoorFill />
+                </NavLink>
+                <NavLink to="/login">
+                    Entrar
+                </NavLink>
+                <NavLink to="/register">
+                    Registrar
+                </NavLink>
+            </ul>
+        </nav>
+    )
+}
+
+export default Navbar
