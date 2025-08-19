@@ -8,20 +8,27 @@ const Navbar = () => {
     return (
         <nav className={styles.nav}>
             <Link to="/">Reactgram</Link>
-            <form>
+            <form className={styles.search_form}>
                 <BsSearch />
-                <input type="text" />
+                <input type="text" placeholder="Pesquisar" />
             </form>
             <ul className={styles.nav_links}>
-                <NavLink to="/">
-                    <BsHouseDoorFill />
-                </NavLink>
-                <NavLink to="/login">
-                    Entrar
-                </NavLink>
-                <NavLink to="/register">
-                    Registrar
-                </NavLink>
+                <li>
+                    <NavLink to="/">
+                        <BsHouseDoorFill />
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/login">
+                        Entrar
+                    </NavLink>
+                </li>
+                <li>
+                    <NavLink to="/register">
+                        Registrar
+                    </NavLink>
+                </li>
+
             </ul>
         </nav>
     )
