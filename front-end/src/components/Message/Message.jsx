@@ -1,9 +1,11 @@
-import styles from './Message.module.css'
+import "./Message.css";
 
-const Message = (msg, type) => {
+const Message = ({ msg, type }) => {
     return (
-        <div className={`${styles.message} ${styles[type]}`}>{msg}</div>
-    )
-}
+        <div className={`message ${type}`}>
+            <p>{msg}</p>
+        </div>
+    );
+};
 
-export default Message
+export default Message;

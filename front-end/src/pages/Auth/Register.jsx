@@ -2,6 +2,7 @@ import "./Auth.css"
 
 // Componentes
 import { Link } from 'react-router-dom'
+import Message from "../../components/Message/Message"
 
 // Hooks
 import { useState, useEffect } from "react"
@@ -58,7 +59,9 @@ const Register = () => {
             <input type="email" placeholder="Email" onChange={(e) => setEmail(e.target.value)} value={email} />
             <input type="password" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} value={password} />
             <input type="password" placeholder="Confirme sua senha" onChange={(e) => setConfirmPassword(e.target.value)} value={confirmPassword} />
-            <input type="submit" value="Cadastrar" />
+            {!loading && <input type="submit" value="Cadastrar" />}
+            {loading && <input type="submit" value="Aguarde..." disabled />}
+            {error && <Message msg={error} type="error" />}
         </form>
         <p>Já tem conta ? <Link to="/login">Click aqui</Link></p>
     </div>
