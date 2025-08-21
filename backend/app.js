@@ -11,9 +11,11 @@ const app = express()
 // config JSON and form data response
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors())
+
 
 // Solve CORS - http://localhost:5000 => porta de origem do frontend
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }))
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }))
 
 // Upload directory
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")))

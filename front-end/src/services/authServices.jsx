@@ -9,7 +9,7 @@ const register = async (data) => {
 
     try {
         // Faz a requisição para a rota de registro da API
-        const res = await fetch(api + "users/register", config)
+        const res = await fetch(api + "/users/register", config)
             .then((res) => res.json()) // transforma a resposta em JSON
             .catch((err) => err) // se algo der errado é mandado para o catch
 

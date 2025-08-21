@@ -1,8 +1,8 @@
 // URL base da API que será usada nas requisições
-export const api = "http://localhost:5173/api"
+export const api = "http://localhost:5000/api"
 
 // URL base para acessar os uploads (como imagens salvas no servidor)
-export const uploads = "http://localhost:5173/uploads"
+export const uploads = "http://localhost:5000/uploads"
 
 // Função que monta a configuração (headers, body, etc) de uma requisição
 export const requestConfig = (method, data, token = null, image = null) => {
