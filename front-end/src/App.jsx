@@ -3,6 +3,9 @@ import './App.css'
 // Router
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
+// Hooks
+import { useAuth } from './hooks/useAuth'
+
 // Pages
 import Home from './pages/Home/Home'
 import Register from './pages/Auth/Register'
@@ -14,6 +17,13 @@ import Footer from './components/Footer/Footer'
 
 function App() {
 
+  const { auth, loading } = useAuth();
+
+  if (loading) {
+    return <p>Carregando...</p>
+  }
+
+
 
   return (
     <>
@@ -21,9 +31,9 @@ function App() {
         <Navbar />
         <div className="container">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={auth ? <Home /> : <Navigate to="/login" />} />
+            <Route path="/register" element={!auth ? <Register /> : <Navigate to="/" />} />
+            <Route path="/login" element={!auth ? <Login /> : <Navigate to="/" />} />
           </Routes>
         </div>
         <Footer />

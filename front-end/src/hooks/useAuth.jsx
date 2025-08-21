@@ -9,7 +9,7 @@ export const useAuth = () => {
     // Estado local para indicar se está autenticado
     const [auth, setAuth] = useState(false);
     // Estado local para indicar carregamento
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
