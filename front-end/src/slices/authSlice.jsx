@@ -31,6 +31,12 @@ export const register = createAsyncThunk("auth/register",
     }
 )
 
+// Função assíncrona (thunk) para deslogar o usuário
+export const logout = createAsyncThunk("auth/logout", async () => {
+    // Remove usuário do localStorage
+    await authService.logout()
+})
+
 // Criação do slice (parte do estado global para autenticação)
 export const authSlice = createSlice({
     name: "auth", // nome do slice
@@ -62,6 +68,13 @@ export const authSlice = createSlice({
                 state.loading = false;     // desativa loading
                 state.error = action.payload; // salva erro retornado
                 state.user = null;         // garante que não tem usuário logado
+            })
+            // Quando a requisição for de logout
+            .addCase(logout.fulfilled, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = null;        // sem erros
+                state.succes = true;       // marca sucesso
+                state.user = null   // lipa campo usuário
             })
     },
 })

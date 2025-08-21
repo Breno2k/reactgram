@@ -28,9 +28,15 @@ const register = async (data) => {
     }
 }
 
+// Logout an user
+const logout = () => {
+    localStorage.removeItem("user");
+}
+
 // Agrupa as funções relacionadas à autenticação em um objeto
 const authService = {
     register,
+    logout,
 }
 
 // Exporta para poder usar em outras partes do projeto
