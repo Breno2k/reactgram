@@ -33,10 +33,34 @@ const logout = () => {
     localStorage.removeItem("user");
 }
 
+// Sing in an user 
+const login = async (data) => {
+
+    const config = requestConfig("POST", data)
+
+    try {
+
+        const res = await fetch(api + "/users/login", config)
+            .then((res) => res.json())
+            .catch((err) => err)
+
+        if (res) {
+            localStorage.setItem("user", JSON.stringify(res))
+        }
+
+        return res
+
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
 // Agrupa as funções relacionadas à autenticação em um objeto
 const authService = {
     register,
     logout,
+    login,
 }
 
 // Exporta para poder usar em outras partes do projeto
