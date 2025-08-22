@@ -30,7 +30,10 @@ const register = async (data) => {
 
 // Logout an user
 const logout = () => {
+
+    // Removendo o usuário do localStorage
     localStorage.removeItem("user");
+
 }
 
 // Sing in an user 
@@ -43,8 +46,6 @@ const login = async (data) => {
         const res = await fetch(api + "/users/login", config)
             .then((res) => res.json())
             .catch((err) => err)
-
-
 
         if (res._id) {
             localStorage.setItem("user", JSON.stringify(res))
