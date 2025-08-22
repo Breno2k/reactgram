@@ -37,6 +37,23 @@ export const logout = createAsyncThunk("auth/logout", async () => {
     await authService.logout()
 })
 
+// Thunk assíncrono para logar o usuário
+// → dispara a requisição e espera resposta da API
+export const login = createAsyncThunk("auth/login",
+    async (user, thunkAPI) => {
+
+        const data = await authService.login(user) // chama o serviço de registro
+
+        // Se a API retornou erros, rejeita a requisição
+        if (data.errors) {
+            return thunkAPI.rejectWithValue(data.errors[0]);
+        }
+
+        // Se deu certo, retorna os dados do usuário
+        return data;
+    }
+)
+
 // Criação do slice (parte do estado global para autenticação)
 export const authSlice = createSlice({
     name: "auth", // nome do slice
@@ -75,6 +92,24 @@ export const authSlice = createSlice({
                 state.error = null;        // sem erros
                 state.succes = true;       // marca sucesso
                 state.user = null   // lipa campo usuário
+            })
+            // Quando a requisição está em andamento
+            .addCase(login.pending, (state) => {
+                state.loading = true;  // ativa loading
+                state.error = false;   // zera erros
+            })
+            // Quando a requisição foi concluída com sucesso
+            .addCase(login.fulfilled, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = null;        // sem erros
+                state.succes = true;       // marca sucesso
+                state.user = action.payload; // salva usuário no estado
+            })
+            // Quando a requisição falhou
+            .addCase(login.rejected, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = action.payload; // salva erro retornado
+                state.user = null;         // garante que não tem usuário logado
             })
     },
 })
