@@ -46,7 +46,7 @@ export const userSlice = createSlice({
             .addCase(profile.fulfilled, (state, action) => {
                 state.loading = false;     // desativa loading
                 state.error = null;        // sem erros
-                state.succes = true;       // marca sucesso
+                state.success = true;       // marca sucesso
                 state.user = action.payload; // salva usuário no estado
             })
     },

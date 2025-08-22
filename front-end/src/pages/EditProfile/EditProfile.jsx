@@ -1,12 +1,48 @@
 import styles from './EditProfile.module.css'
 
+import { uploads } from '../../utils/config'
+
+// Hooks
+import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+
+// Redux
+import { profile, resetMessage } from "../../slices/userSlice"
+
+// Components
+import Message from "../../components/Message/Message"
+
 
 const EditProfile = () => {
 
+    const dispatch = useDispatch()
+
+    const { user, message, loading, error } = useSelector((state) => state.user)
+
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [profileImage, setProfileImage] = useState("")
+    const [bio, setBio] = useState("")
+    const [previewImage, setPreviewImage] = useState("")
+
+    // load user data
+    useEffect(() => {
+        dispatch(profile())
+    }, [dispatch])
+
+    // Fill form with user data
+    useEffect(() => {
+        if (user) {
+            setName(user.name);
+            setEmail(user.email);
+            setBio(user.bio)
+        }
+        console.log(user)
+    }, [user])
+
     const handleSubmit = (e) => {
         e.preventDefault()
-
-
     }
 
     return (
@@ -17,15 +53,15 @@ const EditProfile = () => {
             </p>
             {/* Preview da imagem */}
             <form onSubmit={handleSubmit}>
-                <input type="text" placeholder='Nome' />
-                <input type="email" placeholder='Email' disabled />
+                <input type="text" placeholder='Nome' onChange={(e) => setName(e.target.value)} value={name || ""} />
+                <input type="email" placeholder='Email' disabled value={email || ""} />
                 <label>
                     <span>Imagem do Perfil:</span>
                     <input type="file" />
                 </label>
                 <label>
                     <span>Bio:</span>
-                    <input type="text" placeholder='Descrição do perfil' />
+                    <input type="text" placeholder='Descrição do perfil' onChange={(e) => setBio(e.target.value)} value={bio || ""} />
                 </label>
                 <label>
                     <span>Quer alterar sua senha ?</span>

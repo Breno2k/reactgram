@@ -10,7 +10,7 @@ const user = JSON.parse(localStorage.getItem("user"))
 const initialState = {
     user: user ? user : null, // Se houver usuário no localStorage, coloca no estado
     error: false,  // Guarda mensagem de erro (se houver)
-    succes: false, // Indica se a ação foi bem-sucedida
+    success: false, // Indica se a ação foi bem-sucedida
     loading: false, // Mostra se está carregando (ex.: requisição em andamento)
 }
 
@@ -63,7 +63,7 @@ export const authSlice = createSlice({
         reset: (state) => {
             state.loading = false;
             state.error = false;
-            state.succes = false;
+            state.success = false;
         },
     },
     extraReducers: (builder) => {
@@ -77,7 +77,7 @@ export const authSlice = createSlice({
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;     // desativa loading
                 state.error = null;        // sem erros
-                state.succes = true;       // marca sucesso
+                state.success = true;       // marca sucesso
                 state.user = action.payload; // salva usuário no estado
             })
             // Quando a requisição falhou
@@ -90,7 +90,7 @@ export const authSlice = createSlice({
             .addCase(logout.fulfilled, (state, action) => {
                 state.loading = false;     // desativa loading
                 state.error = null;        // sem erros
-                state.succes = true;       // marca sucesso
+                state.success = true;       // marca sucesso
                 state.user = null   // lipa campo usuário
             })
             // Quando a requisição está em andamento
@@ -102,7 +102,7 @@ export const authSlice = createSlice({
             .addCase(login.fulfilled, (state, action) => {
                 state.loading = false;     // desativa loading
                 state.error = null;        // sem erros
-                state.succes = true;       // marca sucesso
+                state.success = true;       // marca sucesso
                 state.user = action.payload; // salva usuário no estado
             })
             // Quando a requisição falhou
