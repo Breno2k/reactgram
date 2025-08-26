@@ -87,7 +87,8 @@ const getCurrentUser = async (req, res) => {
 // Update on a user
 const update = async (req, res) => {
 
-    const { name, password, bio } = req.body
+    const { name, password, bio } = req.body?.title;
+
 
     let profileImage = null
 
