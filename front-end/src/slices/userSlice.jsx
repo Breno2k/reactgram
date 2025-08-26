@@ -45,6 +45,17 @@ export const updateProfile = createAsyncThunk(
     }
 )
 
+// Get user details
+export const getUserDetails = createAsyncThunk(
+    "user/get", async (id, thunkAPI) => {
+
+        // Buscar os detalhes de um usuário pelo ID
+        const data = await userService.getUserDetails(id)
+
+        return data
+    }
+)
+
 // Criação do slice "user"
 export const userSlice = createSlice({
     name: "user",
@@ -87,6 +98,18 @@ export const userSlice = createSlice({
                 state.loading = false;     // desativa loading
                 state.error = action.payload; // salva erro retornado
                 state.user = {};         // garante que não tem usuário logado
+            })
+            // Quando a requisição está em andamento
+            .addCase(getUserDetails.pending, (state) => {
+                state.loading = true;  // ativa loading
+                state.error = false;   // zera erros
+            })
+            // Quando a requisição foi concluída com sucesso
+            .addCase(getUserDetails.fulfilled, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = null;        // sem erros
+                state.success = true;       // marca sucesso
+                state.user = action.payload; // salva usuário no estado
             })
     },
 })
