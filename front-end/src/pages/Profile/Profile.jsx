@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import { BsFillEyeFill, BsPencilFill, BsXLg } from 'react-icons/bs'
 
 // Hooks
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { getUserDetails } from '../../slices/userSlice'
@@ -24,6 +24,11 @@ const Profile = () => {
     const { user, loading } = useSelector((state) => state.user)
     const { user: userAuth } = useSelector((state) => state.auth)
 
+    // New form and edir form refs
+    const newPhotoForm = useRef()
+    const editPhotoForm = useRef()
+
+
     // loading user data
     // Executa um efeito quando o componente monta ou quando as dependências mudam
     useEffect(() => {
@@ -31,12 +36,17 @@ const Profile = () => {
         dispatch(getUserDetails(id))
     }, [dispatch, id])
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+    }
+
     if (loading) {
         return <p>Carregando...</p>
     }
 
     return (
         <div className={styles.profile}>
+            {/* Cabeçalho do perfil */}
             <div className={styles.profile_header}>
                 {user.profileImage && (
                     <img src={`${uploads}/users/${user.profileImage}`} alt={user.name} />
@@ -46,6 +56,24 @@ const Profile = () => {
                     <p>{user.bio}</p>
                 </div>
             </div>
+            {id === userAuth._id && (
+                <>
+                    <div className={styles.new_photo} ref={newPhotoForm}>
+                        <h3>Compartilhe algum momento seu:</h3>
+                        <form onSubmit={handleSubmit}>
+                            <label>
+                                <span>Título para a foto:</span>
+                                <input type="text" placeholder='Insira um título' />
+                            </label>
+                            <label>
+                                <span>Imagem:</span>
+                                <input type="file" />
+                            </label>
+                            <input type="submit" value="Postar" />
+                        </form>
+                    </div>
+                </>
+            )}
         </div>
     )
 }
