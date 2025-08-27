@@ -38,7 +38,10 @@ export const requestConfig = (method, data, token = null, image = null) => {
 
     // Se o usuário estiver autenticado, adiciona o token no cabeçalho
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`
+        config.headers = {
+            ...config.headers, // mantém headers anteriores (caso haja)
+            Authorization: `Bearer ${token}`,
+        };
     }
 
     // Retorna a configuração pronta para usar no fetch

@@ -81,6 +81,17 @@ export const photoSlice = createSlice({
                 state.error = action.payload; // salva erro retornado
                 state.foto = {};         // garante que não tem foto
             })
+            .addCase(getUserPhotos.pending, (state) => {
+                state.loading = true;  // ativa loading
+                state.error = false;   // zera erros
+            })
+            // Quando a requisição foi concluída com sucesso
+            .addCase(getUserPhotos.fulfilled, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = null;        // sem erros
+                state.success = true;       // marca sucesso
+                state.photo = action.payload; // salva foto no estado
+            })
     },
 })
 

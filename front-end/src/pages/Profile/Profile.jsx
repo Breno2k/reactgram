@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 // Redux
-import { publishPhoto, resetMessage } from '../../slices/photoSlice'
+import { publishPhoto, resetMessage, getUserPhotos } from '../../slices/photoSlice'
 import { getUserDetails } from '../../slices/userSlice'
 
 const Profile = () => {
@@ -24,7 +24,7 @@ const Profile = () => {
 
     const { user, loading } = useSelector((state) => state.user)
     const { user: userAuth } = useSelector((state) => state.auth)
-    const { photo, loading: loadingPhoto, message: messagePhoto, error: errorPhoto } = useSelector((state) => state.photo)
+    const { photos, loading: loadingPhoto, message: messagePhoto, error: errorPhoto } = useSelector((state) => state.photo)
 
     const [title, setTitle] = useState("");
     const [image, setImage] = useState("");
@@ -37,8 +37,9 @@ const Profile = () => {
     // loading user data
     // Executa um efeito quando o componente monta ou quando as dependências mudam
     useEffect(() => {
-        // Dispara a ação para buscar os detalhes do usuário pelo id
+        // Dispara a ação para buscar os detalhes e as fotos do usuário pelo id
         dispatch(getUserDetails(id))
+        dispatch(getUserPhotos(id))
     }, [dispatch, id])
 
     const handleSubmit = (e) => {
@@ -109,6 +110,29 @@ const Profile = () => {
                     {messagePhoto && <Message msg={messagePhoto} type="success" />}
                 </>
             )}
+            {/*  */}
+            <div className={styles.user_photos}>
+                <h2>Fotos publicadas</h2>
+                <div className={styles.photos_container}>
+                    {photos && photos.map((photo) => (
+                        <div className={styles.photo} key={photo._id}>
+                            {photo.image && (<img src={`${uploads}/photos/${photo.image}`} alt={photo.title} />)}
+                            {id === userAuth._id ? (
+                                <div className={styles.actions}>
+                                    <Link to={`/photos/${photo._id}`}>
+                                        <BsFillEyeFill />
+                                    </Link>
+                                    <BsPencilFill />
+                                    <BsXLg />
+                                </div>
+                            ) : (
+                                <Link className="btn" to={`/photos/${photo._id}`}>Ver</Link>
+                            )}
+                        </div>
+                    ))}
+                    {photos.lenght === 0 && <p>Ainda não há fotos publicadas</p>}
+                </div>
+            </div>
         </div>
     )
 }

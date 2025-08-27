@@ -15,7 +15,7 @@ const photoInsertValidation = () => {
                 throw new Error("A imagem é obrigatória.")
             }
             return true
-        })
+        }),
     ]
 }
 
