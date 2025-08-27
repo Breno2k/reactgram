@@ -32,6 +32,23 @@ export const publishPhoto = createAsyncThunk(
     }
 )
 
+// Get user photo
+export const getUserPhotos = createAsyncThunk(
+    "photo/userPhoto",
+    async (id, thunkAPI) => {
+
+        // Pega o token do usuário logado no estado global (auth)
+        const token = thunkAPI.getState().auth.user.token
+
+        // Chama o serviço que publica a foto, enviando o id e o token
+        const data = await photoService.publishPhoto(id, token)
+
+        // Se deu certo, retorna os dados da publicação
+        return data
+
+    }
+)
+
 // Criação do slice para fotos
 export const photoSlice = createSlice({
     name: "photo",
