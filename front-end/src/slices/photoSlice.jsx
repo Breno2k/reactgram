@@ -49,6 +49,28 @@ export const getUserPhotos = createAsyncThunk(
     }
 )
 
+// Delete a photo
+export const deletePhotos = createAsyncThunk(
+    "photo/delete",
+    async (id, thunkAPI) => {
+
+        // Pega o token do usuário logado no estado global (auth)
+        const token = thunkAPI.getState().auth.user.token
+
+        // Chama o serviço que publica a foto, enviando o id e o token
+        const data = await photoService.deletePhoto(id, token)
+
+        // check errors
+        if (data.errors) {
+            return thunkAPI.rejectWithValue(data.errors[0])
+        }
+
+        // Se deu certo, retorna os dados da publicação
+        return data
+
+    }
+)
+
 // Criação do slice para fotos
 export const photoSlice = createSlice({
     name: "photo",
@@ -91,6 +113,28 @@ export const photoSlice = createSlice({
                 state.error = null;        // sem erros
                 state.success = true;       // marca sucesso
                 state.photo = action.payload; // salva foto no estado
+            })
+            .addCase(deletePhotos.pending, (state) => {
+                state.loading = true;  // ativa loading
+                state.error = false;   // zera erros
+            })
+            // Quando a requisição foi concluída com sucesso
+            .addCase(deletePhotos.fulfilled, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = null;        // sem erros
+                state.success = true;       // marca sucesso
+
+                state.photos = state.photos.filter((photo) => {
+                    return photo._id !== action.payload.id
+                })
+
+                state.message = action.payload.message;
+            })
+            // Quando a requisição falhou
+            .addCase(deletePhotos.rejected, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = action.payload; // salva erro retornado
+                state.foto = {};         // garante que não tem foto
             })
     },
 })
