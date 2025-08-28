@@ -71,6 +71,30 @@ export const deletePhotos = createAsyncThunk(
     }
 )
 
+// Update a photo
+export const updatePhoto = createAsyncThunk(
+    "photo/update",
+    async (photoDAta, thunkAPI) => {
+
+        // Pega o token do usuário logado no estado global (auth)
+        const token = thunkAPI.getState().auth.user.token
+
+        // Chama o serviço que publica a foto, enviando o id e o token
+        const data = await photoService.updatePhotos(
+            { title: photoDAta.title }, photoDAta.id, token
+        )
+
+        // check errors
+        if (data.errors) {
+            return thunkAPI.rejectWithValue(data.errors[0])
+        }
+
+        // Se deu certo, retorna os dados da publicação
+        return data
+
+    }
+)
+
 // Criação do slice para fotos
 export const photoSlice = createSlice({
     name: "photo",
@@ -132,6 +156,31 @@ export const photoSlice = createSlice({
             })
             // Quando a requisição falhou
             .addCase(deletePhotos.rejected, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = action.payload; // salva erro retornado
+                state.foto = {};         // garante que não tem foto
+            })
+            .addCase(updatePhoto.pending, (state) => {
+                state.loading = true;  // ativa loading
+                state.error = false;   // zera erros
+            })
+            // Quando a requisição foi concluída com sucesso
+            .addCase(updatePhoto.fulfilled, (state, action) => {
+                state.loading = false;     // desativa loading
+                state.error = null;        // sem erros
+                state.success = true;       // marca sucesso
+
+                state.photos.map((photo) => {
+                    if (photo._id === action.payload.photo._id) {
+                        return (photo.title = action.payload.photo.title)
+                    }
+                    return photo
+                })
+
+                state.message = action.payload.message;
+            })
+            // Quando a requisição falhou
+            .addCase(updatePhoto.rejected, (state, action) => {
                 state.loading = false;     // desativa loading
                 state.error = action.payload; // salva erro retornado
                 state.foto = {};         // garante que não tem foto

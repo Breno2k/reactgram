@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 
 // Redux
-import { publishPhoto, resetMessage, getUserPhotos, deletePhotos } from '../../slices/photoSlice'
+import { publishPhoto, resetMessage, getUserPhotos, deletePhotos, updatePhoto } from '../../slices/photoSlice'
 import { getUserDetails } from '../../slices/userSlice'
 
 const Profile = () => {
@@ -26,8 +26,14 @@ const Profile = () => {
     const { user: userAuth } = useSelector((state) => state.auth)
     const { photos, loading: loadingPhoto, message: messagePhoto, error: errorPhoto } = useSelector((state) => state.photo)
 
+    // States de inclusão
     const [title, setTitle] = useState("");
     const [image, setImage] = useState("");
+
+    // States de edição
+    const [editId, setEditId] = useState("")
+    const [editImage, setEditImage] = useState("")
+    const [editTitle, setEditTitle] = useState("")
 
     // New form and edir form refs
     const newPhotoForm = useRef()
@@ -77,6 +83,44 @@ const Profile = () => {
         resetComponentMessage()
     }
 
+    // Show or hide forms
+    const hideOrShowForms = () => {
+        newPhotoForm.current.classList.toggle(styles.hide)
+        editPhotoForm.current.classList.toggle(styles.hide)
+    }
+
+    // Update a photo
+    const handleUpdate = (e) => {
+        e.preventDefault()
+
+        const photoData = {
+            title: editTitle,
+            id: editId
+        }
+
+        dispatch(updatePhoto(photoData))
+
+        resetComponentMessage()
+
+    }
+
+    // Cancel edit
+    const handleCancelEdit = (e) => {
+        hideOrShowForms()
+    }
+
+    // Open edit form
+    const handleEdit = (photo) => {
+        if (editPhotoForm.current.classList.contains(styles.hide)) {
+            hideOrShowForms()
+        }
+
+        // Atualizando os estados
+        setEditId(photo._id)
+        setEditTitle(photo.title)
+        setEditImage(photo.image)
+    }
+
     const handleFile = (e) => {
         // Image
         const image = e.target.files[0];
@@ -117,6 +161,17 @@ const Profile = () => {
                             {loading && <input type="submit" value="Aguarde..." disabled />}
                         </form>
                     </div>
+                    <div className={`${styles.edit_photo} ${styles.hide}`} ref={editPhotoForm}>
+                        <p>Editando:</p>
+                        {editImage && (
+                            <img src={`${uploads}/photos/${editImage}`} alt={editTitle} />
+                        )}
+                        <form onSubmit={handleUpdate}>
+                            <input type="text" placeholder='Insira um novo título' onChange={(e) => setEditTitle(e.target.value)} value={editTitle || ""} />
+                            <input type="submit" value="Atualizar" />
+                            <button className={styles.cancel_btn} onClick={handleCancelEdit}>Cancelar edição</button>
+                        </form>
+                    </div>
                     {errorPhoto && <Message msg={errorPhoto} type="error" />}
                     {messagePhoto && <Message msg={messagePhoto} type="success" />}
                 </>
@@ -133,7 +188,7 @@ const Profile = () => {
                                     <Link to={`/photos/${photo._id}`}>
                                         <BsFillEyeFill />
                                     </Link>
-                                    <BsPencilFill />
+                                    <BsPencilFill onClick={() => handleEdit(photo)} />
                                     <BsXLg onClick={() => handleDelete(photo._id)} />
                                 </div>
                             ) : (
